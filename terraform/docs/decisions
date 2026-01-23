@@ -1,0 +1,7 @@
+# Architecture Decisions
+
+## Why Load Balancer + 2 Instances
+To demonstrate basic high availability and failure handling.
+
+## Why Terraform
+To ensure infrastructure changes are reproducible and reviewable.
