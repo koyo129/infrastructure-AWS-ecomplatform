@@ -1,0 +1,12 @@
+# Runbook (Draft)
+
+## Service Checks
+- Check ALB target health
+- Confirm EC2 instances are running
+- Verify Nginx service status
+
+## Common Linux Commands
+- systemctl status nginx
+- journalctl -u nginx
+- df -h
+- free -m
