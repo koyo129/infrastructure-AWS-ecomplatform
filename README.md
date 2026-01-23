@@ -16,7 +16,7 @@ Application logic is intentionally kept simple.
 
 ---
 
-## Architecture (Planned)
+# Architecture (Planned)
 - VPC
 - Public subnet (Load Balancer)
 - Private subnet (EC2 instances)
