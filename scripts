@@ -1,1 +1,15 @@
 
+#!/bin/bash
+
+# Update system
+yum update -y
+
+# Install nginx
+yum install -y nginx
+
+# Start and enable nginx
+systemctl start nginx
+systemctl enable nginx
+
+# Create a simple web page
+echo "<h1>Hello from Linux EC2</h1>" > /usr/share/nginx/html/index.html
