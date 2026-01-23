@@ -2,7 +2,7 @@
 erraform-built AWS infra, focused on reliability, security, and ops documentation on E-commerce
 # AWS Platform Infrastructure (Terraform)
 
-## Overview
+# Overview
 This project simulates a small cloud infrastructure platform similar to what
 large-scale services (e.g. e-commerce platforms) run on.
 
