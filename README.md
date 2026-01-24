@@ -15,6 +15,11 @@ The focus is on:
 Application logic is intentionally kept simple.
 
 ---
+## What This Project Demonstrates
+- Infrastructure as Code using Terraform
+- Automated Linux server configuration using user_data
+- Basic cloud security concepts (security groups)
+- Clear documentation and architecture explanation
 
 ## Architecture (Planned)
 - VPC
