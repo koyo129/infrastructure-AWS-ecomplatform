@@ -47,6 +47,10 @@ Application logic is intentionally kept simple.
 - Service continues without user impact if one instance fails
 
 ---
+## Security
+- EC2 instances are protected by Security Groups
+- Only HTTP traffic is allowed from the Load Balancer
+- No direct SSH access from the internet
 
 ## Security Design
 - Only ALB is internet-facing
