@@ -54,7 +54,7 @@ resource "aws_security_group" "web_sg" {
 
 # Create 2 EC2 instances
 resource "aws_instance" "web" {
-  count                  = 2
+  for_each                  = 2
   ami                    = data.aws_ami.amazon_linux.id
   instance_type          = "t3.micro"
   subnet_id              = element(data.aws_subnets.default.ids, count.index)
