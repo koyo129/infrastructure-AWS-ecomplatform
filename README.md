@@ -1,8 +1,13 @@
 # infrastructure-AWS-ecomplatform
-Terraform-built AWS infra, focused on reliability, security, and ops documentation on E-commerce
+erraform-built AWS infra, focused on reliability, security, and ops documentation on E-commerce
 # AWS Platform Infrastructure (Terraform)
 
 ## Overview
+Steps i took was
+1. The problem or the goal I want to achieve
+2. Design ideas necessary components such as traffic flows, business needs, etc
+3. 
+
 This project simulates a small cloud infrastructure platform similar to what
 large-scale services (e.g. e-commerce platforms) run on.
 
@@ -11,6 +16,11 @@ The focus is on:
 - reliability and failure handling
 - security boundaries
 - operational thinking
+
+## Scope & Trade-offs
+This project focuses on high availability within a single AWS region using multiple Availability Zones.
+Multi-region disaster recovery is intentionally out of scope, as it introduces additional complexity
+(DNS failover, data consistency, operational overhead) and is typically addressed based on business requirements.
 
 Application logic is intentionally kept simple.
 
