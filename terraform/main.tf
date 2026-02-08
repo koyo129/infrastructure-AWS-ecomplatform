@@ -1,8 +1,5 @@
 # Terraform configuration will be added here
 
-
-Add Terraform directory structure
-
 provider "aws" {
   region = "ap-northeast-1"
 }
@@ -54,7 +51,7 @@ data "aws_subnets" "default" {
 }
 
 # EC2 instance running Nginx via user_data
-resource "aws_instance" "web" {
+resource "aws_instance" "web1" {
   ami                    = data.aws_ami.amazon_linux.id
   instance_type          = "t3.micro"
   subnet_id              = data.aws_subnets.default.ids[0]
@@ -67,9 +64,11 @@ resource "aws_instance" "web" {
   }
 }
 
-resource "aws_instance" "web" {
+resource "aws_instance" "web2" {
   ami           = data.aws_ami.amazon_linux.id
   instance_type = "t3.micro"
+  subnet_id              = data.aws_subnets.default.ids[0]
+  vpc_security_group_ids = [aws_security_group.web_sg.id]
 
   user_data = file("../scripts/user_data.sh")
 
