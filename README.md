@@ -1,84 +1,227 @@
-# infrastructure-AWS-ecomplatform
-erraform-built AWS infra, focused on reliability, security, and ops documentation on E-commerce
-# AWS Platform Infrastructure (Terraform)
+# 🚀 AWS Multi-AZ Web Infrastructure (Terraform)
 
 ## Overview
-Steps i took was
-1. The problem or the goal I want to achieve
-2. Design ideas necessary components such as traffic flows, business needs, etc
-3. 
 
-This project simulates a small cloud infrastructure platform similar to what
-large-scale services (e.g. e-commerce platforms) run on.
+This project is about provisioning high available web infrastructure on AWS using Terraform.
+It includes:
 
-The focus is on:
-- infrastructure design
-- reliability and failure handling
-- security boundaries
-- operational thinking
+- Custom VPC
+- Public & Private subnets (2 Availability Zones)
+- Internet Gateway
+- NAT Gateways (1 per AZ)
+- Application Load Balancer (ALB)
+- Auto Scaling Group (ASG)
+- Amazon Linux 2023 EC2 instances running nginx
+- Infrastructure defined as code
 
-## Scope & Trade-offs
-This project focuses on high availability within a single AWS region using multiple Availability Zones.
-Multi-region disaster recovery is intentionally out of scope, as it introduces additional complexity
-(DNS failover, data consistency, operational overhead) and is typically addressed based on business requirements.
 
-Application logic is intentionally kept simple.
+This project demonstrates:
 
----
-## What This Project Demonstrates
-- Infrastructure as Code using Terraform
-- Automated Linux server configuration using user_data
-- Basic cloud security concepts (security groups)
-- Clear documentation and architecture explanation
-
-## Architecture (Planned)
-- VPC
-- Public subnet (Load Balancer)
-- Private subnet (EC2 instances)
-- Application Load Balancer with health checks
-- Two Linux EC2 instances running Nginx
-- Security Groups with minimal access
-
-> Architecture diagram will be added.
+- Infrastructure as Code (IaC)
+- High Availability design
+- Secure network architecture
+- Auto-healing compute layer
+- Production-style ALB + ASG architecture
 
 ---
 
-## Traffic Flow
-1. User sends HTTP request
-2. Request reaches the Application Load Balancer
-3. ALB forwards traffic to healthy EC2 instances
-4. EC2 returns a simple response page
+#  Architecture
+
+### Traffic Flow
+
+```
+User
+  ↓
+Internet Gateway
+  ↓
+Application Load Balancer (Public Subnets)
+  ↓
+Auto Scaling Group (Private Subnets)
+  ↓
+nginx running on Amazon Linux
+```
+
+### Outbound Flow (for updates)
+
+```
+EC2 (Private)
+  ↓
+NAT Gateway (Public Subnet)
+  ↓
+Internet Gateway
+  ↓
+Internet
+```
 
 ---
 
-## Reliability / Failure Handling
-- ALB health checks detect unhealthy instances
-- Traffic is automatically routed to healthy servers
-- Service continues without user impact if one instance fails
+# High Availability Design
 
----
-## Security
-- EC2 instances are protected by Security Groups
-- Only HTTP traffic is allowed from the Load Balancer
-- No direct SSH access from the internet
+- Infrastructure has 2 Availability Zones
+- 2 Public Subnets
+- 2 Private Subnets
+- 2 NAT Gateways (one per AZ)
+- Auto Scaling Group maintains minimum 2 instances
+- ALB distributes traffic across AZs
 
-## Security Design
-- Only ALB is internet-facing
-- EC2 instances accept traffic only from ALB Security Group
-- SSH access is restricted (or replaced with SSM)
+Example: If one AZ fails
+- Traffic continues to the healthy AZ
+- ASG replaces unhealthy instances automatically
 
 ---
 
-## Infrastructure as Code
-Infrastructure will be created using Terraform to ensure:
-- reproducibility
-- safe changes
-- version control
+# Security Design
+
+- EC2 instances are deployed in private subnets
+- No public IP assigned to EC2
+- EC2 Security Group only allows traffic from ALB Security Group
+- ALB for public-facing component
+
+Prevents direct internet access to backend servers.
 
 ---
 
-## Future Improvements
-- Add monitoring and alerts
-- Introduce Auto Scaling
-- Add HTTPS with ACM
-- Create operational runbook
+# Services and Tools Used
+
+- Terraform
+- AWS VPC
+- AWS ALB
+- AWS Auto Scaling Group
+- AWS NAT Gateway
+- Amazon Linux 2023
+- nginx
+
+---
+
+# Infrastructure Components
+
+## VPC 
+- Custom CIDR block
+- DNS enabled
+
+## Public Subnets
+- Host ALB and NAT Gateways
+- Route to Internet Gateway
+
+## Private Subnets
+- Host EC2 instances
+- Route outbound traffic through NAT Gateway
+
+## NAT Gateways
+- One per AZ
+- Removes single point of failure
+
+## Load Balancer
+- Public-facing
+- Listens on port 80
+- Performs health checks
+
+## Auto Scaling Group
+- Desired capacity: 2
+- Min size: 2
+- Max size: 4
+- Replaces unhealthy instances automatically
+
+---
+
+# 🖥 EC2 Configuration
+
+Instances run Amazon Linux 2023.
+
+On boot, the following happens automatically:
+
+- OS updates
+- nginx installation
+- Custom HTML page creation
+- nginx service enabled and started
+
+Example `user_data.sh`:
+
+```bash
+#!/bin/bash
+dnf update -y
+dnf install -y nginx
+
+cat <<EOF > /usr/share/nginx/html/index.html
+<h1>Hello from Linux EC2</h1>
+<p>Instance: $(hostname)</p>
+<p>Deployed via Terraform + Auto Scaling</p>
+EOF
+
+systemctl enable nginx
+systemctl start nginx
+```
+
+Refreshing the page shows different hostnames, proving load balancing works.
+
+---
+
+# How to Deploy
+
+### 1. Initialize Terraform
+
+```
+terraform init
+```
+
+### 2. Review Execution Plan
+
+```
+terraform plan
+```
+
+### 3. Apply Infrastructure
+
+```
+terraform apply
+```
+
+### 4. Access the Website
+
+After deployment, Terraform outputs:
+
+```
+alb_dns_name = xxxxx.elb.amazonaws.com
+```
+
+Open this in your browser.
+
+---
+
+# What This Project Demonstrates
+
+- AWS networking fundamentals
+- Proper separation of public and private resources
+- High availability architecture
+- Removal of single points of failure
+- Infrastructure automation best practices
+- Secure backend design (no public EC2 exposure)
+
+---
+
+# Future Improvements
+
+- Add HTTPS (ACM + Route53)
+- Add Auto Scaling policies based on CPU
+- Add CI/CD pipeline for Terraform
+- Add WAF for enhanced security
+- Convert to reusable Terraform modules
+
+---
+
+# Learning Outcome
+
+This project helped deepen understanding of:
+
+- VPC routing behavior
+- NAT Gateway architecture
+- ALB target groups & health checks
+- Auto Scaling self-healing behavior
+- Linux bootstrapping with user_data
+- Infrastructure as Code best practices
+
+---
+
+# Author
+
+Just a curious, motivated student who built as a cloud infrastructure learning project focused on AWS and Terraform. If you have any comments, improvements please messgae or leave a comment!!!!!
