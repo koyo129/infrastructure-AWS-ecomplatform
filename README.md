@@ -1,4 +1,4 @@
-# 🚀 AWS Multi-AZ Web Infrastructure (Terraform)
+# AWS Multi-AZ Web Infrastructure (Terraform)
 
 ## Overview
 
@@ -124,7 +124,7 @@ Prevents direct internet access to backend servers.
 
 ---
 
-# 🖥 EC2 Configuration
+# EC2 Configuration
 
 Instances run Amazon Linux 2023.
 
@@ -206,6 +206,7 @@ Open this in your browser.
 - Add CI/CD pipeline for Terraform
 - Add WAF for enhanced security
 - Convert to reusable Terraform modules
+- S3 for storing logs 
 
 ---
 
