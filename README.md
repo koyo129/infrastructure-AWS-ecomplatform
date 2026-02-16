@@ -81,6 +81,32 @@ Prevents direct internet access to backend servers.
 
 ---
 
+## Observability & Monitoring
+
+## ALB Access Logging
+Application Load Balancer access logs are delivered to an S3 bucket.
+
+This enables:
+- Traffic auditing
+- Request analysis
+- Security investigation
+- Long-term log retention
+
+Logs are stored outside EC2 instances to ensure durability even if instances are replaced by Auto Scaling.
+
+---
+
+## CloudWatch Monitoring
+
+A CloudWatch alarm monitors:
+
+- UnHealthyHostCount (Target Group)
+- Triggers when unhealthy targets > 0
+
+This ensures early detection of instance failures and supports automated recovery through Auto Scaling.
+
+---
+
 # Services and Tools Used
 
 - Terraform
@@ -202,11 +228,10 @@ Open this in your browser.
 # Future Improvements
 
 - Add HTTPS (ACM + Route53)
-- Add Auto Scaling policies based on CPU
+- Add Auto Scaling policies 
 - Add CI/CD pipeline for Terraform
 - Add WAF for enhanced security
 - Convert to reusable Terraform modules
-- S3 for storing logs 
 
 ---
 
