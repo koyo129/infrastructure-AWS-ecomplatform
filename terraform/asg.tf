@@ -31,7 +31,7 @@ resource "aws_autoscaling_group" "web" {
 
   # Replace unhealthy instances based on ALB health checks
   health_check_type         = "ELB"
-  health_check_grace_period = 60
+  health_check_grace_period = 120
 
   launch_template {
     id      = aws_launch_template.web.id
