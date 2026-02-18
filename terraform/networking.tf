@@ -11,23 +11,27 @@ resource "aws_internet_gateway" "igw" {
   tags   = { Name = "tf-igw" }
 }
 
-# Public subnets (for ALB + NAT)
+# Public subnets
 resource "aws_subnet" "public" {
   count                   = 2
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.azs[count.index]
-  availability_zone       = local.azs[count.index]
+  # Use the CIDR variable for the block
+  cidr_block              = var.public_subnet_cidrs[count.index] 
+  # Use the AZ variable for the availability zone
+  availability_zone       = var.azs[count.index] 
   map_public_ip_on_launch = true
 
   tags = { Name = "tf-public-${count.index + 1}" }
 }
 
-# Private subnets (for EC2/ASG)
+# Private subnets
 resource "aws_subnet" "private" {
   count             = 2
   vpc_id            = aws_vpc.main.id
-  cidr_block        = var.azs[count.index]
-  availability_zone = local.azs[count.index]
+  # Use the CIDR variable for the block
+  cidr_block        = var.private_subnet_cidrs[count.index]
+  # Use the AZ variable for the availability zone
+  availability_zone = var.azs[count.index]
 
   tags = { Name = "tf-private-${count.index + 1}" }
 }
